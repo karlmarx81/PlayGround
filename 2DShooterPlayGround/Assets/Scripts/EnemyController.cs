@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     int currentHealth;
     float timer;
     float reverseFactor = 1f;
+    bool broken = true;
         
     void Start()
     {
@@ -24,6 +25,9 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        if (!broken)
+            return;
+
         Vector2 position = rb.position;
 
         if (isVerticalMove)
@@ -58,5 +62,12 @@ public class EnemyController : MonoBehaviour
         {
             controller.ChangeHealth(-1);
         }
+    }
+
+    public void Fix()
+    {
+        broken = false;
+        rb.simulated = false;
+        anim.SetTrigger("Fixed");
     }
 }

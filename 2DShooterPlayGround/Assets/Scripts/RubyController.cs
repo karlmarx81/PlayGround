@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class RubyController : MonoBehaviour
 {
+    [Header("General Settings")]
     public float moveSpeed = 0.1f;    
     public int maxHelath = 5;
     public int health { get { return currentHelath; } }
     public float invincibleTime = 2.0f;
+
+    [Space]
+    [Header("Weapon Settings")]
+    public GameObject weaponPrefab;
+    public GameObject projectile;
+    public float projForce;
     
     Rigidbody2D rb;
     int currentHelath;
@@ -15,12 +22,15 @@ public class RubyController : MonoBehaviour
     float invincibleTimer;
     Vector2 lookDirection = new Vector2(1,0);
     Animator anim;
+    WeaponBase weapon;
+    GameObject enemyTarget;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         currentHelath = maxHelath;
         anim = GetComponent<Animator>();
+        weapon = weaponPrefab.gameObject.GetComponent<WeaponBase>();
     }
 
     void Update()
@@ -28,6 +38,11 @@ public class RubyController : MonoBehaviour
         float horiX = Input.GetAxis("Horizontal");
         float vertY = Input.GetAxis("Vertical");
         Vector2 moveVector = new Vector2(horiX, vertY);
+        if (moveVector.magnitude > 1.0f)
+        {
+            moveVector.Normalize();
+        }
+        
 
         if (!Mathf.Approximately(moveVector.x, 0.0f) || !Mathf.Approximately(moveVector.y, 0.0f))
         {
@@ -51,6 +66,13 @@ public class RubyController : MonoBehaviour
                 isInvincible = false;
             }
         }
+
+        if (Input.GetButton("Jump"))
+        {
+            Launch();
+        }
+
+        FindTarget();        
     }
 
     public void ChangeHealth(int amount)
@@ -68,5 +90,41 @@ public class RubyController : MonoBehaviour
         currentHelath = Mathf.Clamp(currentHelath + amount, 0, maxHelath);       
 
         //Debug.Log(currentHelath + " / " + maxHelath);
+    }
+
+    void Launch()
+    {
+        GameObject fireObj = Instantiate(projectile, rb.position + Vector2.up * 0.5f, Quaternion.identity);
+
+        Projectile proj = fireObj.gameObject.GetComponent<Projectile>();
+        proj.Launch(lookDirection, projForce);
+        anim.SetTrigger("Launch");
+    }
+
+    void FindTarget()
+    {        
+        GameObject[] enemies;
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        float distance = Mathf.Infinity;
+
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            Vector3 diff = enemies[i].transform.position - transform.position;
+            float curDistance = diff.magnitude;
+            if (curDistance < distance)
+            {
+                enemyTarget = enemies[i].gameObject;
+                distance = curDistance;
+            }
+        }
+        //Debug.Log("Target is : " + enemyTarget);
+
+        if (weapon != null)
+        {
+            if (enemyTarget != null)
+            {
+                weapon.SetTarget(enemyTarget);
+            }            
+        }
     }
 }
