@@ -5,10 +5,14 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float maxDistance = 500f;
-    public GameObject parentObj;
+    public float lifeSpan = 2f;
+    public float launchForce = 500f;
+    public GameObject ParentObj { get { return parentObject; } set { parentObject = value; } }
 
     Rigidbody2D rb;
-    Vector2 initPos;    
+    Vector2 initPos;
+    float lifeTime = 0f;
+    GameObject parentObject;
 
     void Awake()
     {
@@ -22,12 +26,24 @@ public class Projectile : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        lifeTime += Time.deltaTime;
+
+        if (lifeTime >= lifeSpan)
+        {
+            Destroy(gameObject);
+        }
     }
 
-    public void Launch(Vector2 direction, float force)
+    public void Launch(Vector2 direction, float forceMultiplier)
     {
-        rb.AddForce(direction * force);        
-    }    
+        rb.AddForce(direction * forceMultiplier * launchForce);                        
+    }
+
+    public void Rotate(float angle)
+    {
+        rb.SetRotation(angle);
+    }
 
     private void OnCollisionEnter2D(Collision2D col)
     {
@@ -36,7 +52,14 @@ public class Projectile : MonoBehaviour
 
         if (enemy != null)
         {
-            enemy.Fix();
+            enemy.Fix();            
+        }
+
+        Projectile proj = col.gameObject.GetComponent<Projectile>();
+
+        if (proj != null && proj.parentObject == parentObject)
+        {
+            return;
         }
 
         Destroy(gameObject);

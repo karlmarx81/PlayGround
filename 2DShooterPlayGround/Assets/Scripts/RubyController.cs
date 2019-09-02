@@ -21,9 +21,11 @@ public class RubyController : MonoBehaviour
     bool isInvincible;
     float invincibleTimer;
     Vector2 lookDirection = new Vector2(1,0);
+    Vector2 moveVector;
     Animator anim;
     WeaponBase weapon;
     GameObject enemyTarget;
+    bool canShoot;
 
     void Start()
     {
@@ -31,18 +33,21 @@ public class RubyController : MonoBehaviour
         currentHelath = maxHelath;
         anim = GetComponent<Animator>();
         weapon = weaponPrefab.gameObject.GetComponent<WeaponBase>();
+        if (weapon != null)
+        {
+            weapon.WeaponOwner = transform.gameObject;
+        }
     }
 
     void Update()
     {
         float horiX = Input.GetAxis("Horizontal");
         float vertY = Input.GetAxis("Vertical");
-        Vector2 moveVector = new Vector2(horiX, vertY);
+        moveVector = new Vector2(horiX, vertY);
         if (moveVector.magnitude > 1.0f)
         {
             moveVector.Normalize();
-        }
-        
+        }       
 
         if (!Mathf.Approximately(moveVector.x, 0.0f) || !Mathf.Approximately(moveVector.y, 0.0f))
         {
@@ -72,7 +77,22 @@ public class RubyController : MonoBehaviour
             Launch();
         }
 
-        FindTarget();        
+        FindTarget();
+        ShootingCheck();
+    }
+
+    void ShootingCheck()
+    {
+        if (Mathf.Approximately(moveVector.magnitude, 0.0f))
+        {
+            canShoot = true;
+            weapon.CanShoot = canShoot;
+        }
+        else
+        {
+            canShoot = false;
+            weapon.CanShoot = canShoot;
+        }
     }
 
     public void ChangeHealth(int amount)

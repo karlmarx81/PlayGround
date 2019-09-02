@@ -144,4 +144,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDistance: 10
-  parentObj: {fileID: 0}
+  lifeSpan: 2
+  launchForce: 500
