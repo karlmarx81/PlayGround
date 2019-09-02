@@ -28,14 +28,8 @@ public class WeaponBase : MonoBehaviour
         SetWeaponDirection(aimDirection);
 
         if (CheckROF())
-        {            
-            GameObject projInstance = Instantiate(projectile, muzzleTransform.position, muzzleTransform.rotation);           
-
-            Projectile projComp = projInstance.gameObject.GetComponent<Projectile>();
-            if (projComp != null)
-            {
-                projComp.Launch(DegreeToVector2(aimDirection.z), 300f);                
-            }            
+        {
+            FireProjectile(aimDirection);
         }
     }
 
@@ -58,6 +52,18 @@ public class WeaponBase : MonoBehaviour
         Vector3 baseDirVector = new Vector3(0f, 0f, baseAngle);
 
         return baseDirVector;
+    }
+
+    void FireProjectile(Vector3 direction)
+    {
+        GameObject projInstance = Instantiate(projectile, muzzleTransform.position, muzzleTransform.rotation);
+
+        Projectile projComp = projInstance.gameObject.GetComponent<Projectile>();
+        if (projComp != null)
+        {
+            float randomAngleDiff = Random.RandomRange(-accuracy, accuracy);
+            projComp.Launch(DegreeToVector2(direction.z + randomAngleDiff), 300f);
+        }
     }
 
     void SetWeaponDirection(Vector3 directionVector)
