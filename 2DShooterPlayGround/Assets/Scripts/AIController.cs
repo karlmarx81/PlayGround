@@ -30,22 +30,25 @@ public class AIController : MonoBehaviour
         {
             mySeeker.StartPath(myRb.position, target.transform.position, OnPathComplete);
         }
-    }
-
+    }    
     
-    void Update()
+    void FixedUpdate()
     {
         if (path == null)
         {
-            //Debug.Log("Update Routine Escaped - Path is null : AIController");
-            //return;
+            Debug.Log("Update Routine Escaped - Path is null : AIController");
+            return;
+        }
+        else
+        {
+            Debug.Log("Path id : " + path.pathID);
         }
 
-        if (currentWaypoint > path.vectorPath.Count)
+        if (currentWaypoint >= path.vectorPath.Count)
         {
             reachedEndOfPath = true;
-            //Debug.Log("Update Routine Escaped - reached End of Path : AIController");
-            //return;
+            Debug.Log("Update Routine Escaped - reached End of Path : AIController");
+            return;
         }
         else
         {
@@ -56,28 +59,30 @@ public class AIController : MonoBehaviour
         Vector2 force = direction * moveSpd * Time.deltaTime;
 
         myRb.AddForce(force);
+        Debug.Log(force.magnitude);
 
         float distance = Vector2.Distance(myRb.position, path.vectorPath[currentWaypoint]);
-
-        if (distance < nextWaypointDist)
-        {
-            currentWaypoint++;
-        }
 
         if (anim != null)
         {
             anim.SetFloat("MoveX", myRb.velocity.x);
             anim.SetFloat("MoveY", myRb.velocity.y);
             Debug.Log("MoveX value is : " + myRb.velocity.x + " ,MoveY value is : " + myRb.velocity.y);
+        }
+
+        if (distance < nextWaypointDist)
+        {
+            currentWaypoint++;
         }        
-        
     }
 
     void OnPathComplete(Path p)
     {
         if (!p.error)
         {
+            path = p;
             currentWaypoint = 0;
+            Debug.Log("Path Calculated");
         }
     }
 }

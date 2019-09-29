@@ -34,7 +34,10 @@ public class WeaponBase : MonoBehaviour
 
         if (CheckROF() && canShoot == true)
         {
-            StartCoroutine(FireProjectile(aimDirection));            
+            if (aimingTarget != null)
+            {
+                StartCoroutine(FireProjectile(aimDirection));
+            }
         }
     }
 
@@ -56,7 +59,15 @@ public class WeaponBase : MonoBehaviour
 
     Vector3 GetAimingDirection()
     {
-        Vector3 targetVector = aimingTarget.transform.position - transform.position;
+        Vector3 targetVector;
+        if (aimingTarget == null)
+        {
+            targetVector = Vector3.zero;
+        }
+        else
+        {
+            targetVector = aimingTarget.transform.position - transform.position;
+        }        
         float baseAngle = Mathf.Atan2(targetVector.y, targetVector.x) * Mathf.Rad2Deg;
         Vector3 baseDirVector = new Vector3(0f, 0f, baseAngle);
 
