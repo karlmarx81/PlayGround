@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7336369214354058223}
   - component: {fileID: 8641299573643646420}
-  m_Layer: 0
+  - component: {fileID: 2085466445387674298}
+  m_Layer: 11
   m_Name: TreeLittle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -80,3 +81,29 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!61 &2085466445387674298
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4998455805936871419}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.5122997, y: -0.29356527}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.7, y: 1.62}
+    newSize: {x: 1.7, y: 1.62}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.6754006, y: 1.0328693}
+  m_EdgeRadius: 0

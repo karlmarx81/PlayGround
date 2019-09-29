@@ -107,8 +107,8 @@ public class RubyController : MonoBehaviour
             anim.SetTrigger("Hit");
         }
 
-        currentHelath = Mathf.Clamp(currentHelath + amount, 0, maxHelath);       
-
+        currentHelath = Mathf.Clamp(currentHelath + amount, 0, maxHelath);
+        UIHealthBar.instance.SetValue(currentHelath / (float)maxHelath);
         //Debug.Log(currentHelath + " / " + maxHelath);
     }
 
