@@ -11,6 +11,7 @@ public class WeaponBase : MonoBehaviour
     public float accuracy;
     public int shotCount;
     public float spreadAngle;
+    public bool holdShootingDebug;
 
     public bool CanShoot { get { return canShoot; } set { canShoot = value; } }
     public GameObject WeaponOwner { get { return WeaponOwner; } set { weaponOwner = value; } }
@@ -76,6 +77,11 @@ public class WeaponBase : MonoBehaviour
 
     IEnumerator FireProjectile(Vector3 direction)
     {
+        if (holdShootingDebug)
+        {
+            yield break;
+        }        
+
         float spreadAngleStep = spreadAngle / shotCount;
         float curAngleStep = direction.z - (spreadAngle / 2f);
 

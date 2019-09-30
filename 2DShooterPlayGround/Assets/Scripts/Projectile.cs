@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float maxDistance = 500f;
+    public float attackPower = 1f;
+    public float maxDistance = 500f;    
     public float lifeSpan = 2f;
     public float launchForce = 500f;
     public GameObject ParentObj { get { return parentObject; } set { parentObject = value; } }
@@ -48,18 +49,29 @@ public class Projectile : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D col)
     {
         Debug.Log("Projectile has collided with : " + col.gameObject.name);
-        EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
+        //EnemyController enemy = col.gameObject.GetComponent<EnemyController>();
 
-        if (enemy != null)
+        //if (enemy != null)
+        //{
+        //    enemy.Fix();
+        //}        
+
+        if (col.gameObject.GetInstanceID() == parentObject.GetInstanceID())
         {
-            enemy.Fix();            
+            Debug.Log("Same Side : " + col.gameObject.GetInstanceID() + ", " + parentObject.GetInstanceID());
+            return;
         }
 
         Projectile proj = col.gameObject.GetComponent<Projectile>();
-
         if (proj != null && proj.parentObject == parentObject)
         {
             return;
+        }
+
+        AIController enemyAi = col.gameObject.GetComponent<AIController>();
+        if (enemyAi != null)
+        {
+            enemyAi.ChangeHealth(attackPower);
         }
 
         Destroy(gameObject);
